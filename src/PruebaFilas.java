@@ -1,6 +1,32 @@
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Scanner;
+
+interface Validacion{
+	Scanner input = new Scanner(System.in);
+	
+	public static int validacionNatural() {
+		int ret = 0;
+		boolean err = false;
+		do {
+			try {
+				ret = input.nextInt();
+			} catch (java.util.InputMismatchException e) {
+				System.out.println("entrada no valida, intente de nuevo:");
+				input.nextLine();
+				err=true;
+			}
+			if (ret>0) {
+				err=false;
+			}else {
+				System.out.println("solo números naturales");
+				err=true;
+			}
+		}while(err);
+		return ret;
+	}
+}
 
 interface RegistroImpresiones{
 	public boolean filaLlena();
@@ -152,10 +178,6 @@ class ImplementacionFilaEstatica implements RegistroImpresiones{
 class ImplementacionFilaDinamica implements RegistroImpresiones{
 	private Queue<Impresion> registro = new LinkedList<Impresion>();
 
-	/*public ImplementacionFilaDinamica(Queue<Impresion> registro) {
-		super();
-		this.registro = registro;
-	}*/
 	public Queue<Impresion> getRegistro() {
 		return registro;
 	}
@@ -234,39 +256,99 @@ public class PruebaFilas {
 
 	public static void main(String[] args) {
 		
-		Impresion i1 = new Impresion(10,20,30);
-		System.out.println(i1);
-		Impresion i2 = new Impresion(40,50,60);
-		System.out.println(i1);
-		Impresion i3 = new Impresion(70,80,90);
-		System.out.println(i1);
+		int id=0;
+		byte opc=0;
+		boolean salir=false;
+		boolean salir1=false;
+		
 		ImplementacionFilaEstatica ife1 = new ImplementacionFilaEstatica(2);
 		ImplementacionFilaDinamica ifd1 = new ImplementacionFilaDinamica();
 		
-		ifd1.insertar(i1);
-		ifd1.insertar(i2);
-		ifd1.insertar(i3);
-		ifd1.totalBytes();
-		ifd1.totalImpresas();
-		
-		System.out.println(ifd1);
-		ifd1.sacar();
-		System.out.println(ifd1);
-		ifd1.sacar();
-		System.out.println(ifd1);
-		ifd1.sacar();
-		
-		/*ife1.insertar(i1);
-		ife1.insertar(i2);
-		System.out.println(ife1);
-		ife1.sacar();
-		System.out.println(ife1);
-		ife1.sacar();
-		System.out.println(ife1);
-		ife1.sacar();*/
-		
-		
-
+		do {
+			System.out.println("1)Usar pila estatica\n2)Usar pila dinamica\n3)Salir");
+			opc = (byte) Validacion.validacionNatural();
+			switch (opc) {
+			case 1:
+				do {
+					salir=false;
+					System.out.println("1)Agregar a la cola de impresión\n2)Mostrar el total de hojas impresas\n3)Mostrar impresión frontal\n4) Mostrar total de bytes recibidos para la impresion\n5)Salir");
+					opc = (byte) Validacion.validacionNatural();
+					switch (opc) {
+					case 1:
+						System.out.println("Cantidad:");
+						int cnt = Validacion.validacionNatural();
+						ife1 = new ImplementacionFilaEstatica(cnt);
+						for(int i=0;i<cnt;i++) {
+							System.out.println("Cantidad de hojas:");
+							int cntHojas = Validacion.validacionNatural();
+							System.out.println("Tamaño en bytes:");
+							int tamaño = Validacion.validacionNatural();
+							ife1.insertar(new Impresion(++id,tamaño,cntHojas));
+						}
+						break;
+					case 2:
+						ife1.totalImpresas();
+						break;
+					case 3:
+						ife1.mostrarFrente();
+						break;
+					case 4:
+						ife1.totalBytes();
+						break;
+					case 5:
+						salir=true;
+						break;
+					default:
+						System.out.println("Opcion no valida");
+						break;
+					}
+				} while (!salir);
+				break;
+			case 2:
+				do {
+					salir=false;
+					System.out.println("1)Agregar a la cola de impresión\n2)Mostrar el total de hojas impresas\n3)Mostrar impresión frontal\n4) Mostrar total de bytes recibidos para la impresion\n5)Salir");
+					opc = (byte) Validacion.validacionNatural();
+					switch (opc) {
+					case 1:
+						System.out.println("Cantidad:");
+						int cnt = Validacion.validacionNatural();
+						ifd1 = new ImplementacionFilaDinamica();
+						for(int i=0;i<cnt;i++) {
+							System.out.println("Cantidad de hojas:");
+							int cntHojas = Validacion.validacionNatural();
+							System.out.println("Tamaño en bytes:");
+							int tamaño = Validacion.validacionNatural();
+							ifd1.insertar(new Impresion(++id,tamaño,cntHojas));
+						}
+						break;
+					case 2:
+						ifd1.totalImpresas();
+						break;
+					case 3:
+						ifd1.mostrarFrente();
+						break;
+					case 4:
+						ifd1.totalBytes();
+						break;
+					case 5:
+						salir=true;
+						break;
+					default:
+						System.out.println("Opcion no valida");
+						break;
+					}
+				} while (!salir);
+				break;
+			case 3:
+				salir1=true;
+				break;
+			default:
+				System.out.println("Opcion no valida");
+				break;
+			}
+		} while (!salir1);
+		System.out.println();
 		
 		
 	}
