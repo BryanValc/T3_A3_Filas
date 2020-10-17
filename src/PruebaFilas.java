@@ -1,4 +1,6 @@
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 interface RegistroImpresiones{
 	public boolean filaLlena();
@@ -147,6 +149,87 @@ class ImplementacionFilaEstatica implements RegistroImpresiones{
 
 }
 
+class ImplementacionFilaDinamica implements RegistroImpresiones{
+	private Queue<Impresion> registro = new LinkedList<Impresion>();
+
+	/*public ImplementacionFilaDinamica(Queue<Impresion> registro) {
+		super();
+		this.registro = registro;
+	}*/
+	public Queue<Impresion> getRegistro() {
+		return registro;
+	}
+	public void setRegistro(Queue<Impresion> registro) {
+		this.registro = registro;
+	}
+	
+	@Override
+	public boolean filaLlena() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public void insertar(Impresion impresion) {
+		Queue<Impresion> registro=this.getRegistro();
+		registro.add(impresion);
+		this.setRegistro(registro);
+	}
+	@Override
+	public boolean filaVacia() {
+		Queue<Impresion> registro=this.getRegistro();
+		return registro.isEmpty();
+	}
+	@Override
+	public Impresion sacar() {
+		if (this.filaVacia()) {
+			System.out.println("Fila vacia");
+			return null;
+		}else {
+			Queue<Impresion> registro=this.getRegistro();
+			return registro.poll();
+		}
+	}
+	@Override
+	public void mostrarFrente() {
+		if (this.filaVacia()) {
+			System.out.println("Fila vacia");
+		}else {
+			Queue<Impresion> registro=this.getRegistro();
+			Impresion frente = registro.peek();
+			System.out.println(frente);
+		}
+	}
+	@Override
+	public void totalImpresas() {
+		Queue<Impresion> reg=this.getRegistro();
+		int sum=0;
+		for (int i=0;i<reg.size();i++) {
+			Impresion tmp = reg.poll();
+			sum+=tmp.getCntHojas();
+			reg.add(tmp);
+		}
+		System.out.println("Total de hojas impresas: "+sum);
+	}
+	@Override
+	public void totalBytes() {
+		Queue<Impresion> reg=this.getRegistro();
+		int sum=0;
+		for (int i=0;i<reg.size();i++) {
+			Impresion tmp = reg.poll();
+			sum+=tmp.getTamaño();
+			reg.add(tmp);
+		}
+		System.out.println("Total de bytes recibidos: "+sum);
+	}
+	
+	@Override
+	public String toString() {
+		return "ImplementacionFilaDinamica [registro=" + registro + "]";
+	}
+	
+	
+}
+
 public class PruebaFilas {
 
 	public static void main(String[] args) {
@@ -155,16 +238,37 @@ public class PruebaFilas {
 		System.out.println(i1);
 		Impresion i2 = new Impresion(40,50,60);
 		System.out.println(i1);
+		Impresion i3 = new Impresion(70,80,90);
+		System.out.println(i1);
 		ImplementacionFilaEstatica ife1 = new ImplementacionFilaEstatica(2);
-		ife1.insertar(i1);
+		ImplementacionFilaDinamica ifd1 = new ImplementacionFilaDinamica();
+		
+		ifd1.insertar(i1);
+		ifd1.insertar(i2);
+		ifd1.insertar(i3);
+		ifd1.totalBytes();
+		ifd1.totalImpresas();
+		
+		System.out.println(ifd1);
+		ifd1.sacar();
+		System.out.println(ifd1);
+		ifd1.sacar();
+		System.out.println(ifd1);
+		ifd1.sacar();
+		
+		/*ife1.insertar(i1);
 		ife1.insertar(i2);
 		System.out.println(ife1);
 		ife1.sacar();
 		System.out.println(ife1);
 		ife1.sacar();
 		System.out.println(ife1);
-		ife1.sacar();
+		ife1.sacar();*/
+		
+		
 
+		
+		
 	}
 
 }
