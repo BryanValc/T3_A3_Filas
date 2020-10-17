@@ -88,16 +88,16 @@ class ImplementacionFilaEstatica implements RegistroImpresiones{
 		this.frente = -1;
 	}
 	
-	public Impresion[] getRegistro() {
+	private Impresion[] getRegistro() {
 		return registro;
 	}
-	public void setRegistro(Impresion[] registro) {
+	private void setRegistro(Impresion[] registro) {
 		this.registro = registro;
 	}
-	public int getFrente() {
+	private int getFrente() {
 		return frente;
 	}
-	public void setFrente(int frente) {
+	private void setFrente(int frente) {
 		this.frente = frente;
 	}
 	
@@ -121,11 +121,13 @@ class ImplementacionFilaEstatica implements RegistroImpresiones{
 		}
 	}
 	public boolean filaVacia() {
+		if (frente==(-1)) {
+			System.out.println("fila vacia");
+		}
 		return (frente==(-1));
 	}
 	public Impresion sacar() {
 		if (this.filaVacia()){
-			System.out.println("Fila vacia");
 			return null;
 		}else {
 			int fr = this.getFrente();
@@ -141,7 +143,6 @@ class ImplementacionFilaEstatica implements RegistroImpresiones{
 	}
 	public void mostrarFrente() {
 		if (this.filaVacia()) {
-			System.out.println("Fila vacia");
 		}else {
 			Impresion datos[]=this.getRegistro();
 			int fr=this.getFrente();
@@ -151,18 +152,24 @@ class ImplementacionFilaEstatica implements RegistroImpresiones{
 	public void totalImpresas() {
 		Impresion datos[]=this.getRegistro();
 		int sum=0;
-		for (int i = 0; i < datos.length; i++) {
-			Impresion tmp = datos[i];
-			sum+=tmp.getCntHojas();
+		if(this.filaVacia()) {
+		}else {
+			for (int i = 0; i < datos.length; i++) {
+				Impresion tmp = datos[i];
+				sum+=tmp.getCntHojas();
+			}
 		}
 		System.out.println("Total de hojas impresas: "+sum);
 	}
 	public void totalBytes() {
 		Impresion datos[]=this.getRegistro();
 		int sum=0;
-		for (int i = 0; i < datos.length; i++) {
-			Impresion tmp = datos[i];
-			sum+=tmp.getTamaño();
+		if(this.filaVacia()) {
+		}else {
+			for (int i = 0; i < datos.length; i++) {
+				Impresion tmp = datos[i];
+				sum+=tmp.getTamaño();
+		}
 		}
 		System.out.println("Total de bytes recibidos: "+sum);
 	}
@@ -199,12 +206,14 @@ class ImplementacionFilaDinamica implements RegistroImpresiones{
 	@Override
 	public boolean filaVacia() {
 		Queue<Impresion> registro=this.getRegistro();
+		if (registro.isEmpty()) {
+			System.out.println("fila vacia");
+		}
 		return registro.isEmpty();
 	}
 	@Override
 	public Impresion sacar() {
 		if (this.filaVacia()) {
-			System.out.println("Fila vacia");
 			return null;
 		}else {
 			Queue<Impresion> registro=this.getRegistro();
@@ -214,7 +223,6 @@ class ImplementacionFilaDinamica implements RegistroImpresiones{
 	@Override
 	public void mostrarFrente() {
 		if (this.filaVacia()) {
-			System.out.println("Fila vacia");
 		}else {
 			Queue<Impresion> registro=this.getRegistro();
 			Impresion frente = registro.peek();
@@ -225,10 +233,13 @@ class ImplementacionFilaDinamica implements RegistroImpresiones{
 	public void totalImpresas() {
 		Queue<Impresion> reg=this.getRegistro();
 		int sum=0;
-		for (int i=0;i<reg.size();i++) {
-			Impresion tmp = reg.poll();
-			sum+=tmp.getCntHojas();
-			reg.add(tmp);
+		if(this.filaVacia()) {
+		}else {
+			for (int i=0;i<reg.size();i++) {
+				Impresion tmp = reg.poll();
+				sum+=tmp.getCntHojas();
+				reg.add(tmp);
+			}
 		}
 		System.out.println("Total de hojas impresas: "+sum);
 	}
@@ -236,10 +247,13 @@ class ImplementacionFilaDinamica implements RegistroImpresiones{
 	public void totalBytes() {
 		Queue<Impresion> reg=this.getRegistro();
 		int sum=0;
-		for (int i=0;i<reg.size();i++) {
-			Impresion tmp = reg.poll();
-			sum+=tmp.getTamaño();
-			reg.add(tmp);
+		if(this.filaVacia()) {
+		}else {
+			for (int i=0;i<reg.size();i++) {
+				Impresion tmp = reg.poll();
+				sum+=tmp.getTamaño();
+				reg.add(tmp);
+			}
 		}
 		System.out.println("Total de bytes recibidos: "+sum);
 	}
@@ -279,6 +293,7 @@ public class PruebaFilas {
 						int cnt = Validacion.validacionNatural();
 						ife1 = new ImplementacionFilaEstatica(cnt);
 						for(int i=0;i<cnt;i++) {
+							System.out.println("Impresion "+(i+1)+":");
 							System.out.println("Cantidad de hojas:");
 							int cntHojas = Validacion.validacionNatural();
 							System.out.println("Tamaño en bytes:");
@@ -291,6 +306,8 @@ public class PruebaFilas {
 						break;
 					case 3:
 						ife1.mostrarFrente();
+						ife1.sacar();
+						System.out.println(ife1);
 						break;
 					case 4:
 						ife1.totalBytes();
@@ -307,7 +324,7 @@ public class PruebaFilas {
 			case 2:
 				do {
 					salir=false;
-					System.out.println("1)Agregar a la cola de impresión\n2)Mostrar el total de hojas impresas\n3)Mostrar impresión frontal\n4) Mostrar total de bytes recibidos para la impresion\n5)Salir");
+					System.out.println("1)Agregar a la cola de impresión\n2)Mostrar el total de hojas impresas\n3)Mostrar impresión frontal\n4)Mostrar total de bytes recibidos para la impresion\n5)Salir");
 					opc = (byte) Validacion.validacionNatural();
 					switch (opc) {
 					case 1:
@@ -315,6 +332,7 @@ public class PruebaFilas {
 						int cnt = Validacion.validacionNatural();
 						ifd1 = new ImplementacionFilaDinamica();
 						for(int i=0;i<cnt;i++) {
+							System.out.println("Impresion "+(i+1)+":");
 							System.out.println("Cantidad de hojas:");
 							int cntHojas = Validacion.validacionNatural();
 							System.out.println("Tamaño en bytes:");
@@ -327,6 +345,8 @@ public class PruebaFilas {
 						break;
 					case 3:
 						ifd1.mostrarFrente();
+						ifd1.sacar();
+						System.out.println(ifd1);
 						break;
 					case 4:
 						ifd1.totalBytes();
@@ -349,7 +369,7 @@ public class PruebaFilas {
 			}
 		} while (!salir1);
 		System.out.println();
-		
+		System.out.println("Fin de ejecucion");
 		
 	}
 
